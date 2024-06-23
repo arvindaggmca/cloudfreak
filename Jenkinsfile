@@ -22,7 +22,7 @@ pipeline {
 		stage('Login to ACR') {
             steps {
                 script {
-                    docker.withRegistry('https://myazregistry06222024.azurecr.io', 'acr-demo') {
+                    docker.withRegistry('myazregistry06222024.azurecr.io', 'acr-demo') {
                         // Use the Docker image for subsequent steps
                     }
                 }
