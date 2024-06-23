@@ -33,7 +33,7 @@ stage('Build and Push Image') {
             steps {
                 script {
                     // Building a Docker image from a Dockerfile in the current directory
-                    def customImage = docker.build("myazregistry06222024.azurecr.io/arvindaggmca/petclinic:${env.BUILD_ID}")
+                    def customImage = docker.build("https://myazregistry06222024.azurecr.io/arvindaggmca/petclinic:${env.BUILD_ID}")
                     // Pushing the image to ACR
                     customImage.push()
                 }
