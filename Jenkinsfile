@@ -18,16 +18,29 @@ pipeline {
 		   sh 'cp -r target/*.jar docker'
            }
         }
-         
-        stage('Build docker image') {
-           steps {
-               script {         
-                 def customImage = docker.build('arvindaggmca/petclinic', "./docker")
-                 docker.withRegistry('https://hub.docker.com/', 'dockerhub') {
-                 customImage.push("${env.BUILD_NUMBER}")
-                 }                     
-           }
+		
+		stage('Login to ACR') {
+            steps {
+                script {
+                    docker.withRegistry('https://myazregistry06222024.azurecr.io', 'acr-demo') {
+                        // Use the Docker image for subsequent steps
+                    }
+                }
+            }
         }
-	  }
+         
+stage('Build and Push Image') {
+            steps {
+                script {
+                    // Building a Docker image from a Dockerfile in the current directory
+                    def customImage = docker.build("myazregistry06222024.azurecr.io/arvindaggmca/petclinic:${env.BUILD_ID}")
+                    // Pushing the image to ACR
+                    customImage.push()
+                }
+            }
+        }
+	  
+	  
+	  
     }
 }
