@@ -1,5 +1,9 @@
 pipeline {
   agent any
+   environment {
+        DOCKER_REGISTRY = "https://myazregistry06222024.azurecr.io"
+    }
+    
     tools {
       maven 'maven3'
                  jdk 'JDK11'
@@ -29,13 +33,20 @@ pipeline {
             }
         }
          
-stage('Build and Push Image') {
+	stage('Build') {
             steps {
                 script {
-                    // Building a Docker image from a Dockerfile in the current directory
-                    def customImage = docker.build("https://myazregistry06222024.azurecr.io/arvindaggmca/petclinic:${env.BUILD_ID}")
-                    // Pushing the image to ACR
-                    customImage.push()
+                    docker.build('petclinic:latest')
+                }
+            }
+        }
+        
+        stage('Push') {
+            steps {
+                script {
+                    docker.withRegistry(env.DOCKER_REGISTRY, 'acr-demo') {
+                        docker.image('petclinic:latest').push()
+                    }
                 }
             }
         }
